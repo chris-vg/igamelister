@@ -10,6 +10,7 @@ import coloredlogs
 import progressbar
 
 from igamelister.cli.config import Config
+from igamelister.cli.igame import Igame
 from igamelister.cli.packages import Packages
 from igamelister.cli.slaves import Slaves
 
@@ -336,7 +337,7 @@ def packages_add():
 @packages.command("list", short_help="List all WHDLoad Packages.")
 @click.pass_context
 def packages_list(ctx):
-    """Display a list of all WHDLoad Packages in the iGameLister WHDLoad Package data file (slaves.dat).
+    """Display a list of all WHDLoad Packages in the iGameLister WHDLoad Package data file (packages.dat).
 
     The list of WHDLoad Packages can be sorted by the following criteria:
 
@@ -358,7 +359,7 @@ def packages_list(ctx):
 @click.argument("package-id", type=int)
 @click.pass_context
 def packages_details(ctx, package_id):
-    """Show the details for a single WHDLoad Package that has an ID matching PACKAGE_ID.
+    """Show the details for a single WHDLoad Package with an ID matching PACKAGE_ID.
     """
     data = Packages(ctx)
     data.load()
@@ -372,7 +373,8 @@ def packages_details(ctx, package_id):
 @click.argument("package-id", type=int)
 @click.pass_context
 def packages_list(ctx, package_id):
-    """Remove a single WHDLoad Package from the collection that has an ID matching PACKAGE_ID.
+    """Remove a single WHDLoad Package from the iGameLister WHDLoad Package data file (packages.dat) that has an
+    ID matching PACKAGE_ID.
     """
     data = Packages(ctx)
     data.load()
@@ -392,7 +394,7 @@ def packages_list(ctx, package_id):
 @packages_add.command("all", short_help="Add all WHDLoad Packages.")
 @click.pass_context
 def packages_add_all(ctx):
-    """Add all WHDLoad Packages from the WHDLoad website.
+    """Add all WHDLoad Packages from every category on the WHDLoad website.
     """
     data = Packages(ctx)
     data.load()
@@ -404,15 +406,18 @@ def packages_add_all(ctx):
         data.save()
 
 
-@packages_add.command("category", short_help="Add category of WHDLoad Packages.")
+@packages_add.command("category", short_help="Add WHDLoad Packages from a category.")
+@click.argument("category_type", type=click.Choice(["apps", "cracktros", "demos", "games", "magazines"]))
 @click.pass_context
-def packages_add_all(ctx):
-    """Add all WHDLoad demo Packages from the WHDLoad website.
+def packages_add_all(ctx, category_type):
+    """Add all WHDLoad Packages from CATEGORY_TYPE on the WHDLoad website.
+
+    Valid category types are: apps, cracktros, demos, games, magazines.
     """
     data = Packages(ctx)
     data.load()
     try:
-        data.cli_packages_add_demos()
+        data.cli_packages_add_category(category_type)
     except KeyboardInterrupt:
         click.echo("\nInterrupted.")
     finally:
@@ -448,6 +453,32 @@ def packages_add_package(ctx, page_url):
 #
 # iGame commands
 #
+
+
+@igame.command("gameslist", short_help="Create gameslist file.")
+@click.pass_context
+def packages_list(ctx):
+    """Create an iGame gameslist file from all WHDLoad Slave and Package details.
+    """
+    data = Igame(ctx)
+    data.load()
+    try:
+        data.cli_igame_gameslist()
+    except KeyboardInterrupt:
+        click.echo("\nInterrupted.")
+
+
+@igame.command("genres", short_help="Create genres file.")
+@click.pass_context
+def packages_list(ctx):
+    """Create an iGame genres file from all WHDLoad Slave and Package details.
+    """
+    data = Igame(ctx)
+    data.load()
+    try:
+        data.cli_igame_genres()
+    except KeyboardInterrupt:
+        click.echo("\nInterrupted.")
 
 
 if __name__ == "__main__":

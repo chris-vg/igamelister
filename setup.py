@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name="igamelister",
-    version="0.8.2",
+    version="0.8.3",
     author="Chris Van Graas",
     author_email="cvgcode@gmail.com",
     description="A tool to generate nicely formatted gameslist and genre files for iGame, an AmigaOS WHDLoad launcher "

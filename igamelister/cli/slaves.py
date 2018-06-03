@@ -28,17 +28,20 @@ class Slaves(DataSet):
     def __init__(self, config):
         super().__init__(config)
 
-    def load(self):
+    def load(self, readonly: bool = False):
         try:
             self.data = self._load_data(Slaves.DATA_FILE)
             self.next_id = itertools.count(max([x.id for x in self.data]) + 1)
-            DataSet.logger.info(f"Loaded WHDLoad Slave data collection.")
+            DataSet.logger.info(f"Loaded iGameLister WHDLoad Slaves data file (slaves.dat).")
         except ValueError:
-            DataSet.logger.info(f"WHDLoad Slave data collection not found. Starting new collection.")
+            if readonly:
+                DataSet.logger.error(f"iGameLister WHDLoad Slaves data file (slaves.dat) not found.")
+            else:
+                DataSet.logger.info(f"iGameLister WHDLoad Slaves data file (slaves.dat) not found. "
+                                    f"Starting new collection.")
 
     def save(self):
         self._save_data(Slaves.DATA_FILE, self.data)
-        # DataSet.logger.info("Saved WHDLoad Slave data cache.")
 
     #
     # Click command methods

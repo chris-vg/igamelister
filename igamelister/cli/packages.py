@@ -32,17 +32,20 @@ class Packages(DataSet):
     def __init__(self, config):
         super().__init__(config)
 
-    def load(self):
+    def load(self, readonly: bool = False):
         try:
             self.data = self._load_data(Packages.DATA_FILE)
             self.next_id = itertools.count(max([x.id for x in self.data]) + 1)
-            DataSet.logger.info(f"Loaded WHDLoad Install Package data collection.")
+            DataSet.logger.info(f"Loaded iGameLister WHDLoad Packages data file (packages.dat).")
         except ValueError:
-            DataSet.logger.info(f"WHDLoad Install Package data collection not found. Starting new collection.")
+            if readonly:
+                DataSet.logger.error(f"iGameLister WHDLoad Packages data file (packages.dat) not found.")
+            else:
+                DataSet.logger.info(f"iGameLister WHDLoad Packages data file (packages.dat) not found. "
+                                    f"Starting new data file.")
 
     def save(self):
         self._save_data(Packages.DATA_FILE, self.data)
-        # DataSet.logger.info("Saved WHDLoad Install Package data cache.")
 
     #
     # Click command methods
@@ -54,23 +57,8 @@ class Packages(DataSet):
     def cli_packages_add_all(self):
         self._cli_packages_add_category("all")
 
-    def cli_packages_add_demos(self):
-        self._cli_packages_add_category("demos")
-
-    def cli_packages_add_games(self):
-        self._cli_packages_add_category("games")
-
-    def cli_packages_add_apps(self):
-        self._cli_packages_add_category("apps")
-
-    def cli_packages_add_cracktros(self):
-        self._cli_packages_add_category("cracktros")
-
-    def cli_packages_add_magazines(self):
-        self._cli_packages_add_category("magazines")
-
-    def cli_packages_update(self):
-        self._cli_packages_add_category("all")
+    def cli_packages_add_category(self, category: str):
+        self._cli_packages_add_category(category)
 
     def cli_packages_list(self):
         self._cli_packages_list()
@@ -88,7 +76,7 @@ class Packages(DataSet):
     def _cli_packages_list(self):
         table = Table()
         section = Section()
-        section.add(Header("Listing all packages in collection."))
+        section.add(Header("Listing all packages in iGameLister WHDLoad Package data file."))
 
         def get(col: str) -> str:
             for package in self.data:
@@ -170,7 +158,7 @@ class Packages(DataSet):
             table.draw()
 
         else:
-            click.echo("No matching WHDLoad Slave found in collection.")
+            click.echo("No matching WHDLoad Slave found in iGameLister WHDLoad Slaves data file.")
 
     @staticmethod
     def _package_slave_details(slave: Slave, table: Table):
@@ -392,7 +380,7 @@ class Packages(DataSet):
             is_dupe = False
             for p in self.data:
                 if new_package == p.list_info:
-                    Packages.logger.info(f"Package '{new_package[0]}' already exists in collection.")
+                    Packages.logger.info(f"Package '{new_package[0]}' already exists in WHDLoad Packages data file.")
                     is_dupe = True
                     break
             if not is_dupe:
