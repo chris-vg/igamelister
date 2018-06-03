@@ -18,7 +18,7 @@ setup(
     url="https://github.com/chris-vg/igamelister",
     packages=find_packages(),
     classifiers=(
-        "Development Status :: 4 - Beta",
+        "Development Status :: 3 - Alpha",
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
