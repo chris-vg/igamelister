@@ -12,6 +12,13 @@ $ pip install igamelister
 
 iGameLister supports Python 3.6 and newer.
 
+## Dependencies
+
+Requires C++ build tools to compile the required [lhafile](https://pypi.org/project/lhafile/) module.
+
+On Windows you will need to have either [Visual Studio 2017](https://www.visualstudio.com/) with **Python development workload** installed,
+or you can install the [Build Tools for Visual Studio 2017](https://www.visualstudio.com/downloads/#build-tools-for-visual-studio-2017).
+
 ## Usage
 
 iGameLister can be run directly as an executable
