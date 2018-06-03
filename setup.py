@@ -1,9 +1,28 @@
 from setuptools import setup, find_packages
 
+
+def readme():
+    with open("README.md", "r") as fh:
+        return fh.read()
+
+
 setup(
     name="igamelister",
-    version="1.0",
+    version="0.8",
+    author="Chris Van Graas",
+    author_email="cvgcode@gmail.com",
+    description="A tool to generate nicely formatted gameslist and genre files for iGame, an AmigaOS WHDLoad launcher "
+                "application.",
+    long_description=readme(),
+    long_description_content_type="text/markdown",
+    url="https://github.com/chris-vg/igamelister",
     packages=find_packages(),
+    classifiers=(
+        "Development Status :: 4 - Beta",
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ),
     include_package_data=True,
     install_requires=[
         "Click",
