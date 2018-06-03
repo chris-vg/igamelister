@@ -36,12 +36,12 @@ class Packages(DataSet):
         try:
             self.data = self._load_data(Packages.DATA_FILE)
             self.next_id = itertools.count(max([x.id for x in self.data]) + 1)
-            DataSet.logger.info(f"Loaded iGameLister WHDLoad Packages data file (packages.dat).")
+            DataSet.logger.info(f"Loaded iGameLister WHDLoad Package data file (packages.dat).")
         except ValueError:
             if readonly:
-                DataSet.logger.error(f"iGameLister WHDLoad Packages data file (packages.dat) not found.")
+                DataSet.logger.error(f"iGameLister WHDLoad Package data file (packages.dat) not found.")
             else:
-                DataSet.logger.info(f"iGameLister WHDLoad Packages data file (packages.dat) not found. "
+                DataSet.logger.info(f"iGameLister WHDLoad Package data file (packages.dat) not found. "
                                     f"Starting new data file.")
 
     def save(self):
@@ -60,8 +60,11 @@ class Packages(DataSet):
     def cli_packages_add_category(self, category: str):
         self._cli_packages_add_category(category)
 
-    def cli_packages_list(self):
-        self._cli_packages_list()
+    def cli_packages_list(self, sort_by: str):
+        self._cli_packages_list(sort_by=sort_by)
+
+    def cli_packages_find(self, filter_text: str, sort_by: str):
+        self._cli_packages_list(filter_text, sort_by)
 
     def cli_packages_details(self, package_id: int):
         self._cli_packages_details(package_id)
@@ -73,10 +76,10 @@ class Packages(DataSet):
     # Private methods
     #
 
-    def _cli_packages_list(self):
+    def _cli_packages_list(self, filter_text: str = None, sort_by: str = None):
         table = Table()
         section = Section()
-        section.add(Header("Listing all packages in iGameLister WHDLoad Package data file."))
+        section.add(Header("List of all packages in iGameLister WHDLoad Package data file."))
 
         def get(col: str) -> str:
             for package in self.data:
@@ -158,7 +161,7 @@ class Packages(DataSet):
             table.draw()
 
         else:
-            click.echo("No matching WHDLoad Slave found in iGameLister WHDLoad Slaves data file.")
+            click.echo("No matching WHDLoad Slave found in iGameLister WHDLoad Slave data file.")
 
     @staticmethod
     def _package_slave_details(slave: Slave, table: Table):
@@ -374,28 +377,28 @@ class Packages(DataSet):
                 new_package = p
                 break
         if new_package is None:
-            Packages.logger.info(f"No matching package found.")
+            Packages.logger.info(f"No matching WHDLoad Package found.")
             return
         else:
             is_dupe = False
             for p in self.data:
                 if new_package == p.list_info:
-                    Packages.logger.info(f"Package '{new_package[0]}' already exists in WHDLoad Packages data file.")
+                    Packages.logger.info(f"Package '{new_package[0]}' already exists in WHDLoad Package data file.")
                     is_dupe = True
                     break
             if not is_dupe:
-                Packages.logger.info(f"Adding '{new_package[0]}' to collection.")
+                Packages.logger.info(f"Adding '{new_package[0]}' to WHDLoad Package data file.")
                 self._add_package(new_package)
                 self.save()
 
     def _cli_packages_remove(self, package_id: int):
         del_indexes = [i for i in range(len(self.data)) if package_id == self.data[i].id]
         if len(del_indexes) == 1:
-            Packages.logger.info(f"Removing '{self.data[del_indexes[0]].name}' from collection.")
+            Packages.logger.info(f"Removing '{self.data[del_indexes[0]].name}' from WHDLoad Package data file.")
             del self.data[del_indexes[0]]
             self.save()
         else:
-            Packages.logger.info(f"Package ID '{package_id}' not found in collection.")
+            Packages.logger.info(f"Package ID '{package_id}' not found in WHDLoad Package data file.")
 
     def _cli_packages_add_category(self, category: str):
         Packages.logger.info(f"Getting package info from www.whdload.de ...")
@@ -422,14 +425,14 @@ class Packages(DataSet):
                 package_text = "package"
             else:
                 package_text = "packages"
-            Packages.logger.info(f"Removed {len(changed)} outdated {package_text} from collection.")
+            Packages.logger.info(f"Removed {len(changed)} outdated {package_text} from WHDLoad Package data file.")
 
         if len(new_packages) > 0:
             if len(new_packages) == 1:
                 package_text = "package"
             else:
                 package_text = "packages"
-            Packages.logger.info(f"Adding {len(new_packages)} {package_text} to collection.")
+            Packages.logger.info(f"Adding {len(new_packages)} {package_text} to WHDLoad Package data file.")
 
             if shutil.get_terminal_size().columns >= 120:
                 bar_name_width = 35
@@ -449,7 +452,6 @@ class Packages(DataSet):
                 bar_widgets = [
                     progressbar.Percentage(),
                     " ", progressbar.Bar(left="[", right="]", fill="."),
-                    # " ", progressbar.Counter("%(value)5d"), f"/{len(new_packages):d}",
                     " ", progressbar.Timer(format="%(elapsed)s"),
                     " | ", bar_name_format, " "
                 ]
@@ -472,4 +474,4 @@ class Packages(DataSet):
             DataSet.logger.info("Finished!")
             bar.update(bar.max_value)
         else:
-            Packages.logger.info(f"No packages to add to collection.")
+            Packages.logger.info(f"No packages to add to WHDLoad Package data file.")

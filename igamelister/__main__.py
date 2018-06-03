@@ -139,7 +139,7 @@ def slaves():
 #
 
 
-@slaves.group("add", short_help="Add WHDLoad Slaves to data file.")
+@slaves.group("add", short_help="Add WHDLoad Slaves.")
 def slaves_add():
     """Add information from local WHDLoad Slave files to the iGameLister WHDLoad Slave data file (slaves.dat).
     """
@@ -161,7 +161,7 @@ def slaves_details(ctx, slave_id):
         click.echo("\nInterrupted.")
 
 
-@slaves.command("find", short_help="Find WHDLoad Slaves in the data file.")
+@slaves.command("find", short_help="Find WHDLoad Slaves.")
 @click.argument("filter-text")
 @click.option("-s", "--sort-by",
               type=click.Choice(["id", "date", "dir", "file", "name"]),
@@ -335,8 +335,11 @@ def packages_add():
 
 
 @packages.command("list", short_help="List all WHDLoad Packages.")
+@click.option("-s", "--sort-by",
+              type=click.Choice(["id", "date", "name"]),
+              help="Sort the list of WHDLoad Packages.")
 @click.pass_context
-def packages_list(ctx):
+def packages_list(ctx, sort_by):
     """Display a list of all WHDLoad Packages in the iGameLister WHDLoad Package data file (packages.dat).
 
     The list of WHDLoad Packages can be sorted by the following criteria:
@@ -344,13 +347,37 @@ def packages_list(ctx):
     \b
       id: The ID number of the WHDLoad Packages. (default)
     date: The release date of the WHDLoad Packages.
-    file: The file name of the WHDLoad Packages.
     name: The internal name of the WHDLoad Slaves.
     """
     data = Packages(ctx)
     data.load()
     try:
-        data.cli_packages_list()
+        data.cli_packages_list(sort_by)
+    except KeyboardInterrupt:
+        click.echo("\nInterrupted.")
+
+
+@packages.command("find", short_help="Find WHDLoad Packages.")
+@click.argument("filter-text")
+@click.option("-s", "--sort-by",
+              type=click.Choice(["id", "date", "name"]),
+              help="Sort the list of WHDLoad Packages.")
+@click.pass_context
+def packages_find(ctx, filter_text, sort_by):
+    """Display a list of all WHDLoad Packages in the iGameLister WHDLoad Package data file (packages.dat) that include
+    FILTER_TEXT in the name.
+
+    The list of WHDLoad Packages can be sorted by the following criteria:
+
+    \b
+      id: The ID number of the WHDLoad Packages. (default)
+    date: The release date of the WHDLoad Packages.
+    name: The internal name of the WHDLoad Slaves.
+    """
+    data = Packages(ctx)
+    data.load()
+    try:
+        data.cli_packages_find(filter_text, sort_by)
     except KeyboardInterrupt:
         click.echo("\nInterrupted.")
 

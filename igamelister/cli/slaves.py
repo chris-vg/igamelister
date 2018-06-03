@@ -32,13 +32,13 @@ class Slaves(DataSet):
         try:
             self.data = self._load_data(Slaves.DATA_FILE)
             self.next_id = itertools.count(max([x.id for x in self.data]) + 1)
-            DataSet.logger.info(f"Loaded iGameLister WHDLoad Slaves data file (slaves.dat).")
+            DataSet.logger.info(f"Loaded iGameLister WHDLoad Slave data file (slaves.dat).")
         except ValueError:
             if readonly:
-                DataSet.logger.error(f"iGameLister WHDLoad Slaves data file (slaves.dat) not found.")
+                DataSet.logger.error(f"iGameLister WHDLoad Slave data file (slaves.dat) not found.")
             else:
-                DataSet.logger.info(f"iGameLister WHDLoad Slaves data file (slaves.dat) not found. "
-                                    f"Starting new collection.")
+                DataSet.logger.info(f"iGameLister WHDLoad Slave data file (slaves.dat) not found. "
+                                    f"Starting new data file.")
 
     def save(self):
         self._save_data(Slaves.DATA_FILE, self.data)
@@ -206,12 +206,12 @@ class Slaves(DataSet):
             table.add(section)
             table.draw()
         else:
-            click.echo("No matching WHDLoad Slave found in collection.")
+            click.echo("No matching WHDLoad Slave found in WHDLoad Slave data file.")
 
     def _cli_slaves_list(self, filter_text: str = None, sort_by: str = None):
         table = Table()
 
-        title_str = "List of all WHDLoad Slaves in collection"
+        title_str = "List of all WHDLoad Slaves in iGameLister WHDLoad Slave data file."
         if filter_text is not None:
             title_str += f" containing '{filter_text}'"
         title_str += ", sorted by "
@@ -311,7 +311,7 @@ class Slaves(DataSet):
             self.save()
             DataSet.logger.info(f"Removed WHDLoad Slave '{file_name}' with ID {slave_id}.")
         else:
-            DataSet.logger.info(f"No match found for ID {slave_id} in WHDLoad Slave collection.")
+            DataSet.logger.info(f"No match found for ID {slave_id} in WHDLoad Slave data file.")
 
     def _cli_slaves_add_slave(self, source_file: BinaryIO, installed_root_path: str):
         file_path = source_file.name
@@ -391,7 +391,7 @@ class Slaves(DataSet):
         for i in range(len(self.data)):
             if installed_path is not None:
                 if installed_path == self.data[i].installed_path:
-                    DataSet.logger.info(f"Duplicate match for '{file_name}' found in collection.")
+                    DataSet.logger.info(f"Duplicate match for '{file_name}' found in WHDLoad Slave data file.")
                     if file_size != self.data[i].file_size:
                         DataSet.logger.info(f"File size_bytes for '{file_name}' differs to existing record.")
                         match_index = i
@@ -406,7 +406,7 @@ class Slaves(DataSet):
 
         if match_index is not None:
             del self.data[match_index]
-            DataSet.logger.info(f"Removed '{file_name}' from collection.")
+            DataSet.logger.info(f"Removed '{file_name}' from WHDLoad Slave data file.")
 
         for item in self.data:
             if file_name == item.file_name:
@@ -419,7 +419,7 @@ class Slaves(DataSet):
                 self.save()
             except OSError as e:
                 DataSet.logger.error(f"{e.args[0]} Skipping.")
-            DataSet.logger.info(f"Added '{file_name}' to collection.")
+            DataSet.logger.info(f"Added '{file_name}' to WHDLoad Slave data file.")
 
     @staticmethod
     def _reformat_amiga_path(amiga_path: str, file_path: str) -> str:
