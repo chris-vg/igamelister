@@ -19,6 +19,10 @@ Requires C++ build tools to compile the required [lhafile](https://pypi.org/proj
 On Windows you will need to have either [Visual Studio 2017](https://www.visualstudio.com/) with **Python development workload** installed,
 or you can install the [Build Tools for Visual Studio 2017](https://www.visualstudio.com/downloads/#build-tools-for-visual-studio-2017).
 
+More info available at the following links:
+* https://wiki.python.org/moin/WindowsCompilers
+* https://blogs.msdn.microsoft.com/pythonengineering/2016/04/11/unable-to-find-vcvarsall-bat/
+
 ## Usage
 
 iGameLister can be run directly as an executable
