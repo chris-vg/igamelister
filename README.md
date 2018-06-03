@@ -45,4 +45,4 @@ $ python -m igamelister
 * Lemon Amiga: http://www.lemonamiga.com/
 * Amiga Demoscene Archive: http://ada.untergrund.net/
 * Kestra BitWorld: http://janeway.exotica.org.uk/
-* Pouët: http://www.pouet.net/
+* Pou&#xeb;t: http://www.pouet.net/
